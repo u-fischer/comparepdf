@@ -62,8 +62,10 @@ function legacysettings()
 end
 
 local shellquote="'"
+local startprog="xdg-open"
 if os.type=="windows" then
   shellquote=""
+  startprog="start"
 end
 
 local setting =shellquote .. legacysettings().." \\input" .. shellquote
@@ -150,7 +152,7 @@ for page=1,math.min(legacypages,newpages) do
  else
    io.stderr:write ('\n'..filename..'.'..ext..': Difference on page '.. page..' with values '..report..'.')
    if view then
-    os.execute('start '..filename..'-diff-'..page..'.png')
+    os.execute(startprog .. ' '..filename..'-diff-'..page..'.png')
    end 
  end 
 end 
