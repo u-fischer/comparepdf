@@ -61,9 +61,14 @@ function legacysettings()
  return legacy
 end
 
-local setting =legacysettings()
+local shellquote="'"
+if os.type=="windows" then
+  shellquote=""
+end
 
-local legacycompilation = engine ..' --jobname='..filename..'-legacy '..legacysettings()..'\\input{'.. filename..'.'..ext..'}'   
+local setting =shellquote .. legacysettings().." \\input" .. shellquote
+
+local legacycompilation = engine ..' --jobname='..filename..'-legacy '..setting..'{'.. filename..'.'..ext..'}'   
 local newcompilation = engine ..' --jobname='..filename..'-new '.. filename ..'.'..ext
 
 f = io.open(filename.."."..ext)
@@ -127,7 +132,7 @@ print("Checking "..math.min(legacypages,newpages).." page(s)!")
 
 function magickcall(filename,density,page) 
  local pagenum=page+1
- local call =  'magick compare -highlight-color blue -density ' .. density ..' ' 
+ local call =  'magick compare -highlight-color blue -density ' .. density ..' '
  call = call .. filename..'-legacy.pdf['..page..'] '
  call = call .. filename..'-new.pdf['..page..'] '
  call = call .. filename..'-diff-'..pagenum..'.png '
@@ -138,7 +143,7 @@ end
 for page=1,math.min(legacypages,newpages) do
  local handle = io.popen (magickcall(filename,density,page-1)) 
  local report = handle:read("*a") 
- local nodiff = handle:close()  
+ local nodiff = handle:close()
  if nodiff then
    io.stdout:write ('\n'..filename..'.'..ext..': No differences on page '..page..'.')  
    os.remove(filename..'-diff-'..page..'.png')  
