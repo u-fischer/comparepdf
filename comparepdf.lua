@@ -10,6 +10,8 @@ local ext="tex"
 local resetencoding =''
 local density = 300
 local view=false
+local tofile=false
+local tofileext=".dlg"
 
 -- current options (rather crude needs reviewing ...)
 -- -p: use pdflatex-dev
@@ -19,6 +21,7 @@ local view=false
 -- -rN: set runs to N
 -- -eXXX: set file extension to .XXX
 -- -dNNN: set density to NNN (higher density is slower!)
+-- -f: write result message also to filename.dlg
 -- other: file name
 
 for i = 1,#arg do
@@ -39,6 +42,8 @@ for i = 1,#arg do
      _,_, density = string.find(arg[i], "^-d(%d+)")       
    elseif string.find(arg[i], "^-v") then
      view = true
+   elseif string.find(arg[i], "^-f") then
+     tofile = true
    else 
     filename = arg[i]
    end    
@@ -122,6 +127,11 @@ else
 f:close()
 end
 
+-- open file for writing the result
+if tofile then
+ resulthandle = assert(io.open(filename..tofileext, "w"))
+end 
+
 -- get page numbers
 local handle = io.popen("qpdf --show-npages "..filename.."-legacy.pdf")
 local legacypages = handle:read("*number")
@@ -147,12 +157,22 @@ for page=1,math.min(legacypages,newpages) do
  local report = handle:read("*a") 
  local nodiff = handle:close()
  if nodiff then
+   if tofile then
+     resulthandle:write('\n'..filename..'.'..ext..': No differences on page '..page..'.') 
+   end
    io.stdout:write ('\n'..filename..'.'..ext..': No differences on page '..page..'.')  
-   os.remove(filename..'-diff-'..page..'.png')  
+   os.remove(filename..'-diff-'..page..'.png')       
  else
+   if tofile then
+     resulthandle:write('\n'..filename..'.'..ext..': Difference on page '.. page..' with values '..report..'.')
+   end
    io.stderr:write ('\n'..filename..'.'..ext..': Difference on page '.. page..' with values '..report..'.')
    if view then
-    os.execute(startprog .. ' '..filename..'-diff-'..page..'.png')
-   end 
+      os.execute(startprog .. ' '..filename..'-diff-'..page..'.png')
+   end
  end 
 end 
+
+if tofile then
+ resulthandle:close() 
+end

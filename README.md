@@ -27,6 +27,8 @@ If one of the PDF has more pages the surplus is silently ignored.
 
 * By default compilation runs twice on every version, this can be changed with the option `-rN`, e.g. `-r1` compiles once.
 
+* With the option `-f` the result message is also written to a file `file.dlg`
+
 * Other options are described in the lua-file.
 
 * The option `-v` opens the file in the default png viewer (with `start` on windows or `xdg-open`). This perhaps would need customising for other platforms.
