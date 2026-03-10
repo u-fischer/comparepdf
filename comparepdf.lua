@@ -11,7 +11,7 @@ local resetencoding =''
 local density = 300
 local view=false
 local tofile=false
-local tofileext=".dlg"
+local tofileext=".diff.log"
 
 -- current options (rather crude needs reviewing ...)
 -- -p: use pdflatex-dev
