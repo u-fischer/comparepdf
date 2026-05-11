@@ -15,6 +15,8 @@ local tofileext=".diff.log"
 
 -- current options (rather crude needs reviewing ...)
 -- -p: use pdflatex-dev
+-- -ll: use lualatex
+-- -pl: use pdflatex
 -- -l: do not compile legacy PDF
 -- -n: do not compile new PDF
 -- -v: run viewer
@@ -28,6 +30,11 @@ for i = 1,#arg do
   if arg[i] then
    if arg[i]=='-p' then
      engine = 'pdflatex-dev'
+     resetencoding = '\\def\\encodingdefault{T1}'
+   elseif arg[i]=='-ll' then
+     engine = 'lualatex'     
+   elseif arg[i]=='-pl' then
+     engine = 'pdflatex'          
      resetencoding = '\\def\\encodingdefault{T1}'
    elseif arg[i]=='-l' then
      compilelegacy = false
