@@ -4,10 +4,12 @@ Compare the PDF output of legacy LaTeX with tagged PDF.
 
 ## Requirements
 
-A working ImageMagick that can compare PDFs. 
+* A working ImageMagick that can compare PDFs.  
 That means `magick compare test1.pdf test2.pdf diff.png` should work.
 
-A current TeX system.
+* A working `qpdf` https://qpdf.sourceforge.io. This is used to extract the number of pages the pdf. 
+
+* A current TeX system.
 
 ## Use
 
